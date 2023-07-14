@@ -1,46 +1,114 @@
 // GET REQUEST
 function getTodos() {
-  console.log('GET Request');
+
+  axios({
+    method:'get',
+    url:'https://jsonplaceholder.typicode.com/todos'
+  }).then(res =>showOutput(res)).
+    catch(err=>console.log(err));
 }
 
 // POST REQUEST
 function addTodo() {
-  console.log('POST Request');
+  
+  axios.post('https://jsonplaceholder.typicode.com/todos',{
+      title:'New todo',
+      completed:false
+  }
+  ).then(res =>showOutput(res)).
+    catch(err=>console.log(err));
 }
 
 // PUT/PATCH REQUEST
 function updateTodo() {
-  console.log('PUT/PATCH Request');
+  axios.put('https://jsonplaceholder.typicode.com/todos/1',{
+    title:'update todo',
+    completed:true
+}
+).then(res =>showOutput(res)).
+  catch(err=>console.log(err));
 }
 
 // DELETE REQUEST
 function removeTodo() {
-  console.log('DELETE Request');
+  axios.delete('https://jsonplaceholder.typicode.com/todos/1')
+  .then(res =>showOutput(res)).
+  catch(err=>console.log(err));
 }
 
 // SIMULTANEOUS DATA
 function getData() {
-  console.log('Simultaneous Request');
+  axios.all([axios.get('https://jsonplaceholder.typicode.com/todos?_limit=5'),
+            axios.get('https://jsonplaceholder.typicode.com/posts?_limit=5')
+          ])
+  .then(axios.spread((todos,posts)=>showOutput(posts))).
+  catch(err=>console.log(err));
+  
 }
 
 // CUSTOM HEADERS
 function customHeaders() {
-  console.log('Custom Headers');
+  const config={
+    headers:{
+      'content-Type':'application/json',
+      Authorization:'sometoken'
+    }
+  }
+  axios.post('https://jsonplaceholder.typicode.com/todos',{
+      title:'New todo',
+      completed:false
+  },config
+  ).then(res =>showOutput(res)).
+    catch(err=>console.log(err));
+  
 }
 
 // TRANSFORMING REQUESTS & RESPONSES
 function transformResponse() {
-  console.log('Transform Response');
+  const options={
+    method:'post',
+    url:'https://jsonplaceholder.typicode.com/todos',
+    data:{title:'hello world'},
+    transformResponse:axios.defaults.transformResponse.concat(data=>{
+      data.title=data.title.toUpperCase();
+      return data;
+    })
+  };
+  axios(options).then(res=>showOutput(res));
 }
 
 // ERROR HANDLING
 function errorHandling() {
-  console.log('Error Handling');
+  axios({
+    method:'get',
+    url:'https://jsonplaceholder.typicode.com/todoss'
+  }).then(res =>showOutput(res)).
+    catch(err=>{
+      if(err.reponse){
+        console.log(err.reponse.data);
+        console.log(err.reponse.status);
+        console.log(err.reponse.headers);
+      }
+    });
+  
 }
 
 // CANCEL TOKEN
 function cancelToken() {
-  console.log('Cancel Token');
+  const source=axios.CancelToken.source();
+  axios({
+    method:'get',
+    url:'https://jsonplaceholder.typicode.com/todos',cancelToken:source
+  }).then(res =>showOutput(res)).
+    catch(err=>{
+      if(axios.isCancel(err)){
+        console.log('Request Canceled',err.message);
+        
+      }
+      if(true){
+        source.cancel('Request Canceled')
+      }
+    });
 }
 
 // INTERCEPTING REQUESTS & RESPONSES
