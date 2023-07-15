@@ -89,6 +89,21 @@ padding: 20px;
         var list=document.getElementById('lists');
         form.addEventListener('submit',addData);
 
+        window.addEventListener("DOMContentLoaded",()=>{
+
+            axios.get("https://crudcrud.com/api/aa07bdc108a144a6b49bcf7239ef68d7/appointmentData").
+            then(response=>{
+              for(let i=0;i<response.data.length;i++){
+                showOutput(response.data[i]);
+                console.log(response.data[i]);
+              }
+                
+            }).catch((err)=>{
+                console.log(err);
+            })
+
+        });
+
         
         function addData(e){
             e.preventDefault();
@@ -104,7 +119,7 @@ padding: 20px;
             axios.post("https://crudcrud.com/api/aa07bdc108a144a6b49bcf7239ef68d7/appointmentData",obj).
             then(response=>{
                 showOutput(response);
-            }).then(err=>{
+            }).catch((err)=>{
                 console.log(err);
             })
 
@@ -117,12 +132,12 @@ padding: 20px;
         }
 
         function showOutput(res) {
-                     document.getElementById('res').innerHTML = `
+                     document.getElementById('res').innerHTML += `
   
                      <div class="card mt-3">
                     <div class="card-header">Data </div>
                         <div class="card-body">
-                            <pre>${JSON.stringify(res.data, null, 2)}</pre>
+                            <pre>${JSON.stringify(res)}</pre>
                         </div>
                     </div>  `;
             }
