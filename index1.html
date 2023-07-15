@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dom Manipulation</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    form{
+      background-color: #D7DBDD ;
+      text-align: center;
+    }      
+input[type=text] {
+width: 100%; 
+padding: 12px; 
+border: 1px solid #ccc; 
+border-radius: 4px; 
+box-sizing: border-box; 
+margin-top: 6px; 
+margin-bottom: 16px;
+text-align: center;
+}
+input[type=password] {
+width: 100%; 
+padding: 12px; 
+border: 1px solid #ccc; 
+border-radius: 4px; 
+box-sizing: border-box; 
+margin-top: 6px; 
+margin-bottom: 16px;
+text-align: center;
+}
+
+
+.button {
+background-color:orange; 
+border: none;
+color: white;
+padding: 15px 32px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+}
+
+
+
+
+
+
+.container {
+width: 50%;
+border-radius: 5px;
+background-color: white;
+padding: 20px;
+
+}
+      </style>
+  
+</head>
+<body>
+
+    <div class="container" >
+        <form id="myForm">
+      
+        <label for="name">Name</label>
+          <input type="text"  name="password1" id="name" placeholder="Enter Name">
+          <label for="email">Email</label>
+          <input type="text"  name="email" id="email" placeholder="Enter Email">
+            <input type="submit"  value="submit">
+      
+        </form>
+      </div>
+     
+    <div class="main-container">
+        <div class="container">
+            <ul id="lists"></ul>
+
+        </div>
+    </div>
+    <div id="res"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+
+    
+      <script>
+        var form=document.getElementById('myForm');
+        var list=document.getElementById('lists');
+        form.addEventListener('submit',addData);
+
+        
+        function addData(e){
+            e.preventDefault();
+            
+            var email=document.getElementById('email').value;
+            var name=document.getElementById('name').value;
+            let obj={
+                "Name":name,
+                "Email":email,
+                
+            }
+
+            axios.post("https://crudcrud.com/api/aa07bdc108a144a6b49bcf7239ef68d7/appointmentData",obj).
+            then(response=>{
+                showOutput(response);
+            }).then(err=>{
+                console.log(err);
+            })
+
+    
+            //list.innerHTML += ` <li class='listitems'><span contenteditable = 'true'>${email}</span> <span>${password}</span> <button class="edit-btn">Edit</button><button class='listitems_btn'>X</button></li> `
+            // making the input box empty
+    
+        email.value = ""
+        name.value = ""
+        }
+
+        function showOutput(res) {
+                     document.getElementById('res').innerHTML = `
+  
+                     <div class="card mt-3">
+                    <div class="card-header">Data </div>
+                        <div class="card-body">
+                            <pre>${JSON.stringify(res.data, null, 2)}</pre>
+                        </div>
+                    </div>  `;
+            }
+       
+      </script>
+</body>
