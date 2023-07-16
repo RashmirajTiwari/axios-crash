@@ -65,8 +65,9 @@ padding: 20px;
     <div class="container" >
         <form id="myForm">
       
+          <input type="text"  name="name" id="id" >
         <label for="name">Name</label>
-          <input type="text"  name="password1" id="name" placeholder="Enter Name">
+          <input type="text"  name="name" id="name" placeholder="Enter Name">
           <label for="email">Email</label>
           <input type="text"  name="email" id="email" placeholder="Enter Email">
             <input type="submit"  value="submit">
@@ -107,7 +108,7 @@ padding: 20px;
         
         function addData(e){
             e.preventDefault();
-            
+            var id=document.getElementById('id').value;
             var email=document.getElementById('email').value;
             var name=document.getElementById('name').value;
             let obj={
@@ -116,16 +117,34 @@ padding: 20px;
                 
             }
 
+            
             axios.post("https://crudcrud.com/api/9f8597b52ec44d879cfff990cdbd6269/appointmentData",obj).
             then(response=>{
                 showOutput(response);
             }).catch((err)=>{
                 console.log(err);
             })
+  
+            //edit Method
+              if(id!=''){
+
+              
+              let obj={
+                "Name":name,
+                "Email":email,
+              }
+            axios.put(`https://crudcrud.com/api/9f8597b52ec44d879cfff990cdbd6269/appointmentData/${id}`,obj).
+            then(response=>{
+                showOutput(response);
+            }).catch((err)=>{
+                console.log(err);
+            })
+
+          }
     
-        email.value = ""
-        name.value = ""
-        }
+            email.value = ""
+            name.value = ""
+          }
 
         function showOutput(res) {
           list.innerHTML  += `<li class='listitems'><span contenteditable = 'true'><span style="display:none">${res._id}</span><span>${res.Name+"  "}</span> <span>${res.Email}</span> <button class="edit-btn">Edit</button><button class='listitems_btn'>Delete</button></li>`;    
@@ -144,11 +163,28 @@ padding: 20px;
             }).catch((err)=>{
                 console.log(err);
             })
-            console.log(id);
             
             list.removeChild(li)
 
         }}}
+
+        list.addEventListener("click",edit)
+        function edit(e) {
+        if (e.target.classList.contains("edit-btn")) {
+          const email=document.getElementById('email');
+          const name=document.getElementById('name');
+          const id=document.getElementById('id');
+    
+            const li = e.target.parentElement
+            id.value=li.children[0].innerText;
+            name.value=li.children[1].innerText;
+            email.value=li.children[2].innerText;
+            console.log(id.value);
+            e.target.parentElement.remove();
+
+        
+        }
+      }
        
       </script>
 </body>
