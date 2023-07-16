@@ -91,7 +91,7 @@ padding: 20px;
 
         window.addEventListener("DOMContentLoaded",()=>{
 
-            axios.get("https://crudcrud.com/api/aa07bdc108a144a6b49bcf7239ef68d7/appointmentData").
+            axios.get("https://crudcrud.com/api/9f8597b52ec44d879cfff990cdbd6269/appointmentData").
             then(response=>{
               for(let i=0;i<response.data.length;i++){
                 showOutput(response.data[i]);
@@ -116,31 +116,39 @@ padding: 20px;
                 
             }
 
-            axios.post("https://crudcrud.com/api/aa07bdc108a144a6b49bcf7239ef68d7/appointmentData",obj).
+            axios.post("https://crudcrud.com/api/9f8597b52ec44d879cfff990cdbd6269/appointmentData",obj).
             then(response=>{
                 showOutput(response);
             }).catch((err)=>{
                 console.log(err);
             })
-
-    
-            //list.innerHTML += ` <li class='listitems'><span contenteditable = 'true'>${email}</span> <span>${password}</span> <button class="edit-btn">Edit</button><button class='listitems_btn'>X</button></li> `
-            // making the input box empty
     
         email.value = ""
         name.value = ""
         }
 
         function showOutput(res) {
-                     document.getElementById('res').innerHTML += `
-  
-                     <div class="card mt-3">
-                    <div class="card-header">Data </div>
-                        <div class="card-body">
-                            <pre>${JSON.stringify(res)}</pre>
-                        </div>
-                    </div>  `;
-            }
+          list.innerHTML  += `<li class='listitems'><span contenteditable = 'true'><span style="display:none">${res._id}</span><span>${res.Name+"  "}</span> <span>${res.Email}</span> <button class="edit-btn">Edit</button><button class='listitems_btn'>Delete</button></li>`;    
+        }
+
+        list.addEventListener('click',deleteItem);
+        function deleteItem(e) {
+        if (e.target.classList.contains("listitems_btn")) {
+        if (confirm("Are You Sure ? ")) {
+            const li = e.target.parentElement
+            const id=li.firstElementChild.innerText
+            
+            axios.delete(`https://crudcrud.com/api/9f8597b52ec44d879cfff990cdbd6269/appointmentData/${id}`).
+            then(response=>{
+                showOutput(response);
+            }).catch((err)=>{
+                console.log(err);
+            })
+            console.log(id);
+            
+            list.removeChild(li)
+
+        }}}
        
       </script>
 </body>
